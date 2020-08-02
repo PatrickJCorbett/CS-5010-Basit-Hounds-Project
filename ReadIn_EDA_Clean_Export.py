@@ -13,9 +13,10 @@ import matplotlib.pyplot as plt
 #%%
 
 #Read in Excess Deaths dataset
-excess_deaths = pd.read_csv('Excess_Deaths_Associated_with_COVID-19.csv')
+url = 'https://data.cdc.gov/api/views/xkkf-xrst/rows.csv?accessType=DOWNLOAD&bom=true&format=true%20target='
+excess_deaths = pd.read_csv(url)
 
-#%%
+
 #Perform some initial eda of the dataset
 
 #see the columns we are working with
@@ -111,6 +112,7 @@ duplicates = check_dups[check_dups.duplicated()].sort_values(by =
                                                              ['State',
                                                               'Week Ending Date'])
 
+check_why_dups = excess_deaths.sort_values(by = ['State','Week Ending Date','Outcome'])
 #There are duplicates for each state, and this is because there are 
 #entries for each state where obsesrved counts are weighted to account
 #for incompletness of recent data. For our purposes, we will limit
@@ -150,6 +152,11 @@ excess_deaths_predicted = excess_deaths_complete[
 
 #Next, we will limit our dataset to only the previously listed fields
 #that will be used for our queries.
+check_vars = ['Week Ending Date', 'State','Observed Number',
+              'Upper Bound Threshold', 'Average Expected Count',
+              'Excess Lower Estimate','Excess Higher Estimate',
+              'Outcome']
+
 excess_deaths_selected = excess_deaths_predicted[check_vars]
 
 #Additionally, for our analysis we wish to focus on 2020 data, so we 
@@ -170,7 +177,7 @@ NY_data = excess_deaths_2020[excess_deaths_complete['State'].isin(
 #Next, sum the selected fields for each Week and Outcome
 NY_data_aggregate = NY_data.groupby(['Week Ending Date','Outcome']).sum()
 #Define the State value here as 'New York Total'
-NY_data_aggregate['State'] = 'New York Total'
+NY_data_aggregate['State'] = 'New York'
 
 #Because we used the groupby function, Week Ending Date and Outcome
 #are now part of the index. To combine this data back, need to reset index.
