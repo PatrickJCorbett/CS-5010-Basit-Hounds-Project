@@ -37,23 +37,24 @@ class ExcessDeathsAnalyzer:
         """
         ## state chosen by the user to analyze
         self.state = state 
+
+        self.state = state
+        self.full_data = full_data
         
-        ## dataset that contains the excess deaths for the country and 
-        ## each state, already cleaned and ready to analyze
-        self.full_data = full_data 
+        #self.data is the full subset of data for the specified state
+        self.data = self.full_data[self.full_data['State'] == self.state]               
         
-        ## self.data is the full subset of data for that state
-        self.data = self.full_data[self.full_data['State'] == self.state] 
+        #convert date to a datetime
+        pd.to_datetime(self.data.loc[:,'Week Ending Date']) 
         
-        ## convert date to a datetime
-        self.data['Week Ending Date'] = pd.to_datetime(self.data['Week Ending Date'])
-        
-        ## self.data_allCauses keeps only the rows for 'All causes'
+        #self.data_allCauses keeps only the rows for 'All causes'
         self.data_allCauses = self.data[self.data['Outcome'] == 'All causes']
         
-        ## self.data_exceptCovid keeps only the rows for 'All causes, excluding 
-        ## COVID-19'
-        self.data_exceptCovid = self.data[self.data['Outcome'] == 'All causes, excluding COVID-19']
+        #self.data_exceptCovid keeps only the rows 
+        #for 'All causes, excluding COVID-19'
+        self.data_exceptCovid = self.data[self.data['Outcome'] == 'All causes,'\
+                                          ' excluding COVID-19']
+
         
         
     def timeSeries(self, save = False, filename = None):
