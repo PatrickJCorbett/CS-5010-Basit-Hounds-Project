@@ -1,0 +1,13 @@
+,Week Ending Date,State,Observed Number,Upper Bound Threshold,Average Expected Count,Excess Lower Estimate,Excess Higher Estimate,Outcome
+4212,3/7/2020,Michigan,2004,2110,1986,0,18,All causes
+4213,3/14/2020,Michigan,1974,2108,1980,0,0,All causes
+4214,3/21/2020,Michigan,2054,2087,1959,0,95,All causes
+6788,3/7/2020,Ohio,2514,2684,2524,0,0,All causes
+6789,3/14/2020,Ohio,2552,2680,2517,0,35,All causes
+6790,3/21/2020,Ohio,2524,2680,2519,0,5,All causes
+14148,3/7/2020,Michigan,2004,2110,1986,0,18,"All causes, excluding COVID-19"
+14149,3/14/2020,Michigan,1973,2108,1980,0,0,"All causes, excluding COVID-19"
+14150,3/21/2020,Michigan,2033,2087,1959,0,74,"All causes, excluding COVID-19"
+16724,3/7/2020,Ohio,2514,2684,2524,0,0,"All causes, excluding COVID-19"
+16725,3/14/2020,Ohio,2551,2680,2517,0,34,"All causes, excluding COVID-19"
+16726,3/21/2020,Ohio,2516,2680,2519,0,0,"All causes, excluding COVID-19"
