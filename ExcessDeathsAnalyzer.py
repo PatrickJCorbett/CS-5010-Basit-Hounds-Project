@@ -223,7 +223,7 @@ class ExcessDeathsAnalyzer:
         ## create 2 datasets with all the data from the 2 states being compared 
         data_1 = self.data
         data_2 = self.full_data[self.full_data['State'] == state2]
-        data_2['Week Ending Date'] = pd.to_datetime(data_2['Week Ending Date'])
+        pd.to_datetime(data_2.loc[:, 'Week Ending Date'])
         
         ## x-axis of dates for time-series comparisions
         x = self.data['Week Ending Date'].unique() ## x-axis of dates
