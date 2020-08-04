@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 
 #%%
 #read in data
-#excess_deaths_final = pd.read_csv('Excess Deaths Cleaned.csv')
+excess_deaths_final = pd.read_csv('Excess Deaths Cleaned.csv')
 
 #%%
 #Define ExcessDeathsAnalyzer class
@@ -33,22 +33,31 @@ class ExcessDeathsAnalyzer:
         -------
         None.
 
-        Object of this class is initialized with one argument, the state.
+        Object of this class is initialized with two arguments, the state and
+        the dataset to be used.
+        
+        (The dataset can be generated using the ReadIn_EDA_Clean_Export module)
+        
         The initializer defines the state attribute and the data subsets
-        for the state
+        for the state.
         
         """
         self.state = state
         self.full_data = full_data
-        #self.data is the full subset of data for that state
-        self.data = self.full_data[self.full_data['State'] == self.state]        
+        
+        #self.data is the full subset of data for the specified state
+        self.data = self.full_data[self.full_data['State'] == self.state]               
+        
         #convert date to a datetime
-        self.data['Week Ending Date'] = pd.to_datetime(self.data['Week Ending Date'])
+        pd.to_datetime(self.data.loc[:,'Week Ending Date']) 
+        
         #self.data_allCauses keeps only the rows for 'All causes'
         self.data_allCauses = self.data[self.data['Outcome'] == 'All causes']
+        
         #self.data_exceptCovid keeps only the rows 
         #for 'All causes, excluding COVID-19'
-        self.data_exceptCovid = self.data[self.data['Outcome'] == 'All causes, excluding COVID-19']
+        self.data_exceptCovid = self.data[self.data['Outcome'] == 'All causes,'\
+                                          ' excluding COVID-19']
         
         
         
