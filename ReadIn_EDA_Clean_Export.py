@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Created on Sun Aug  2 09:22:13 2020
+Created on Sun Aug  2 13:29:30 2020
 
 @author: pcorb
 """
@@ -13,9 +13,10 @@ import matplotlib.pyplot as plt
 #%%
 
 #Read in Excess Deaths dataset
-excess_deaths = pd.read_csv('Excess_Deaths_Associated_with_COVID-19.csv')
+url = 'https://data.cdc.gov/api/views/xkkf-xrst/rows.csv?accessType=DOWNLOAD&bom=true&format=true%20target='
+excess_deaths = pd.read_csv(url)
 
-#%%
+
 #Perform some initial eda of the dataset
 
 #see the columns we are working with
@@ -111,6 +112,7 @@ duplicates = check_dups[check_dups.duplicated()].sort_values(by =
                                                              ['State',
                                                               'Week Ending Date'])
 
+check_why_dups = excess_deaths.sort_values(by = ['State','Week Ending Date','Outcome'])
 #There are duplicates for each state, and this is because there are 
 #entries for each state where obsesrved counts are weighted to account
 #for incompletness of recent data. For our purposes, we will limit
@@ -150,6 +152,11 @@ excess_deaths_predicted = excess_deaths_complete[
 
 #Next, we will limit our dataset to only the previously listed fields
 #that will be used for our queries.
+check_vars = ['Week Ending Date', 'State','Observed Number',
+              'Upper Bound Threshold', 'Average Expected Count',
+              'Excess Lower Estimate','Excess Higher Estimate',
+              'Outcome']
+
 excess_deaths_selected = excess_deaths_predicted[check_vars]
 
 #Additionally, for our analysis we wish to focus on 2020 data, so we 
@@ -170,7 +177,7 @@ NY_data = excess_deaths_2020[excess_deaths_complete['State'].isin(
 #Next, sum the selected fields for each Week and Outcome
 NY_data_aggregate = NY_data.groupby(['Week Ending Date','Outcome']).sum()
 #Define the State value here as 'New York Total'
-NY_data_aggregate['State'] = 'New York Total'
+NY_data_aggregate['State'] = 'New York'
 
 #Because we used the groupby function, Week Ending Date and Outcome
 #are now part of the index. To combine this data back, need to reset index.
@@ -188,108 +195,4 @@ excess_deaths_final = pd.concat([excess_deaths_no_ny, NY_data_aggregate])
 print(excess_deaths_final['State'].value_counts())
 #We now have New York Total, and no longer have New York or New York City
 
-#%%
-#Plot of National
-national = excess_deaths_final[excess_deaths_final['State'] == 'United States']
-
-national_all_causes = national[national['Outcome'] == 'All causes']
-all_x = national_all_causes['Week Ending Date']
-all_higher = national_all_causes['Excess Higher Estimate']
-all_lower = national_all_causes['Excess Lower Estimate']
-
-national_all_causes_except_covid = national[national['Outcome'] == 'All causes, excluding COVID-19']
-excCOVID_x = national_all_causes_except_covid['Week Ending Date']
-excCOVID_higher = national_all_causes_except_covid['Excess Higher Estimate']
-excCOVID_lower = national_all_causes_except_covid['Excess Lower Estimate']
-
-plt.plot(all_x, all_higher, color = 'navy', label = "Higher Estimate, All Causes")
-plt.plot(all_x, all_lower, color = 'blue', label = "Lower Estimate, All Causes")
-plt.fill_between(all_x, all_lower, all_higher, color = 'lightskyblue')
-
-plt.plot(excCOVID_x, excCOVID_higher, color  = 'darkgreen', label = "Higher Estimate, Excluding COVID-19")
-plt.plot(excCOVID_x, excCOVID_lower, color = 'mediumseagreen', label = "Lower Estimate, Excluding COVID-19")
-plt.fill_between(excCOVID_x, excCOVID_lower, excCOVID_higher, color = 'lightgreen')
-plt.legend(loc = 'upper left', fontsize = 8)
-plt.ylabel("Excess Deaths")
-plt.title("Excess Deaths with and without COVID-19- National")
-
-#%%
-#Return date of highest excess
-max_date_all = national_all_causes.iloc[
-    national_all_causes['Excess Higher Estimate'].argmax()]['Week Ending Date']
-print("National peak of Excess Deaths, all causes, was on {}".format(max_date_all.date()))
-
-max_date_except_COVID = national_all_causes_except_covid.iloc[
-    national_all_causes_except_covid['Excess Higher Estimate'].argmax()]['Week Ending Date']
-print("National peak of Excess Deaths, all causes except COVID-19, was on {}".format(max_date_except_COVID.date()))
-
-#%%
-#Comparison between NY and Virginia
-
-state1 = "New York Total"
-state2 = "Virginia"
-
-data_1 = excess_deaths_final[excess_deaths_final['State'] == state1]
-data_2 = excess_deaths_final[excess_deaths_final['State'] == state2]
-
-x = excess_deaths_final['Week Ending Date'].unique()
-all_1 = data_1[data_1['Outcome'] == 'All causes']['Excess Higher Estimate'].reset_index(drop = True)
-all_2 = data_2[data_2['Outcome'] == 'All causes']['Excess Higher Estimate'].reset_index(drop = True)
-
-nocovid_1 = data_1[data_1['Outcome'] == 'All causes, excluding COVID-19']['Excess Higher Estimate'].reset_index(drop = True)
-nocovid_2 = data_2[data_2['Outcome'] == 'All causes, excluding COVID-19']['Excess Higher Estimate'].reset_index(drop = True)
-
-
-difference_all = all_1 - all_2
-difference_nocovid = nocovid_1 - nocovid_2
-
-
-fig, a = plt.subplots(2, 2, figsize = (20,10))
-
-a[0,0].plot(x, all_1, label = "Excess Deaths, All Causes- {}".format(state1))
-a[0,0].plot(x, all_2, label = "Excess Deaths, All Causes- {}".format(state2))
-a[0,0].legend(loc = "upper left", fontsize = 8)
-a[0,0].set_ylabel("Higher Estimate of Excess Deaths")
-a[0,0].set_title('Time Series of Excess Deaths, All Causes, Between {} and {}'.format(state1, state2))
-
-a[0,1].plot(x, difference_all)
-a[0,1].set_ylabel("Estimate ({}) - Estimate ({})".format(state1, state2))
-a[0,1].set_title("Difference in Excess Deaths, All Causes, Between {} and {}".format(state1, state2))
-
-a[1,0].plot(x, nocovid_1, label = "Excess Deaths, All Causes Except COVID-19- {}".format(state1))
-a[1,0].plot(x, nocovid_2, label = "Excess Deaths, All Causes Except COVID-19- {}".format(state2))
-a[1,0].legend(loc = "upper left", fontsize = 8)
-a[1,0].set_ylabel("Higher Estimate of Excess Deaths")
-a[1,0].set_title('Time Series of Excess Deaths, All Causes except COVID-19, Between {} and {}'.format(state1, state2))
-
-a[1,1].plot(x, difference_nocovid)
-a[1,1].set_ylabel("Estimate ({}) - Estimate ({})".format(state1, state2))
-a[1,1].set_title("Difference in Excess Deaths, All Causes Except COVID-19, Between {} and {}".format(state1, state2))
-plt.show()
-
-#%%
-#Time series of just Virginia
-
-virginia = excess_deaths_final[excess_deaths_final['State'] == 'Virginia']
-
-virginia_all_causes = virginia[virginia['Outcome'] == 'All causes']
-all_x = virginia_all_causes['Week Ending Date']
-all_higher = virginia_all_causes['Excess Higher Estimate']
-all_lower = virginia_all_causes['Excess Lower Estimate']
-
-virginia_all_causes_except_covid = virginia[virginia['Outcome'] == 'All causes, excluding COVID-19']
-excCOVID_x = virginia_all_causes_except_covid['Week Ending Date']
-excCOVID_higher = virginia_all_causes_except_covid['Excess Higher Estimate']
-excCOVID_lower = virginia_all_causes_except_covid['Excess Lower Estimate']
-
-
-plt.plot(all_x, all_higher, color = 'navy', label = "Higher Estimate, All Causes")
-plt.plot(all_x, all_lower, color = 'blue', label = "Lower Estimate, All Causes")
-plt.fill_between(all_x, all_lower, all_higher, color = 'lightskyblue')
-
-plt.plot(excCOVID_x, excCOVID_higher, color  = 'darkgreen', label = "Higher Estimate, Excluding COVID-19")
-plt.plot(excCOVID_x, excCOVID_lower, color = 'mediumseagreen', label = "Lower Estimate, Excluding COVID-19")
-plt.fill_between(excCOVID_x, excCOVID_lower, excCOVID_higher, color = 'lightgreen', alpha = 0.5)
-plt.legend(loc = 'upper left', fontsize = 8)
-plt.ylabel("Excess Deaths")
-plt.title("Excess Deaths with and without COVID-19- Virginia")
+excess_deaths_final.to_csv('Excess Deaths Cleaned.csv')
