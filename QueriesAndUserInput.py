@@ -16,9 +16,9 @@ import matplotlib.pyplot as plt
 #%%
 
 #Read in data from url and perform data cleaning
-from ReadIn_EDA_Clean_Export_Function import *
+from ReadIn_EDA_Clean_Export import *
 
-
+## clean dataset
 input_data = excess_deaths_final
 
 #%%
@@ -34,20 +34,26 @@ National.timeSeries(save = True, filename = "testplot.png")
 
 
 #%%
+
 #Query 2: Peak date of excess deaths for national
 National.peakDate()
 
 #%%
-#Query 3: Virginia time series
+
+#Query 3: Peak number of excess deaths for national
+National.peakValue()
+
+#%%
+
+#Query 4: Virginia time series
 Virginia = ExcessDeathsAnalyzer("Virginia", input_data)
 Virginia.timeSeries()
 
 
 #%%
-#Query 4: Compare Virginia to New York
-Virginia.compareToState("New York Total")
-#TODO: add an if statement in the class so if user enters "New York" 
-#instead of "New York Total" it still works
+
+#Query 5: Compare Virginia to New York
+Virginia.compareToState("New York")
 
 
 #%%
@@ -55,6 +61,9 @@ Virginia.compareToState("New York Total")
 
 #Ask user what state they are from
 user_state = input("What state are you from (enter the full name)?: ")
+
+######### TODO: ERROR CHECKING FOR STATE NAME
+
 user_info = ExcessDeathsAnalyzer(user_state, input_data)
 
 user_action = input("What would you like to see for {}? Enter 1 for time series, 2 for peak date, or 3 for both: ".format(user_state))
@@ -77,6 +86,8 @@ if compare_y_n == "Y":
 elif compare_y_n == "N":
     print("Okay.")
 
+##### TODO: PRINT ERROR MESSAGE IF SOMETHING OTHER THAN Y OR N IS ENTERED
+
 
 #After they look at their state, give the user the chance to keep looking at other states
 break_indicator = 0
@@ -89,6 +100,9 @@ while break_indicator != -1:
         break_indicator = -1
     elif check_another_state == "Y":
         user_state = input("Sounds good! Which state would you like to see (enter the full name): ")
+        
+        ###### TODO: CHECK IF STATE NOT IN DATASET
+        
         user_info = ExcessDeathsAnalyzer(user_state, input_data)
 
         user_action = input("What would you like to see for {}? Enter 1 for time series, 2 for peak date, or 3 for both: ".format(user_state))
@@ -110,3 +124,12 @@ while break_indicator != -1:
             user_info.compareToState(second_state)
         elif compare_y_n == "N":
             print("Okay.")
+            
+            
+            
+            
+            
+            
+            
+            
+            
