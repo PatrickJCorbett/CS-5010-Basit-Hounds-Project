@@ -48,6 +48,8 @@ National.peakValue()
 #Query 4: Virginia time series
 Virginia = ExcessDeathsAnalyzer("Virginia", input_data)
 Virginia.timeSeries()
+Virginia.peakDate()
+Virginia.peakValue()
 
 
 #%%
@@ -270,10 +272,13 @@ def user_input_activity():
     break_indicator = 0
     
     #The first time through, the user will be asked what state they are from.
-    user_state = get_user_state()
-    
+    loop_ind = 1
     #We set -1 as the cardinal value for the while loop.
     while break_indicator != -1:
+        if loop_ind == 1:
+            user_state = get_user_state()
+        else:
+            user_state = get_next_user_state()
         #Initialize an ExcessDeathsAnalyzer object for the user_state
         user_info = create_user_object(user_state)
         
@@ -304,7 +309,8 @@ def user_input_activity():
         #which one. In this case, the break_indicator remains equal to 0,
         #and so the while loop will begin again.
         if another_state_ind == "Y":
-            user_state == get_next_user_state()
+            loop_ind += 1
+            
        
         #If fthe user does not want to see another state, thank them
         #for participating and set the break_indicator to the cardinal value,
