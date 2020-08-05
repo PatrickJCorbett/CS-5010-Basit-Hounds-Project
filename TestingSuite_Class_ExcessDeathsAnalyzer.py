@@ -15,6 +15,8 @@ import unittest
 import os
 import pandas as pd
 import ExcessDeathsAnalyzer as eda
+from unittest.mock import patch
+
 
 #Test Data 1 contains two states' data for three weeks in March 2020
 #Test Data 2 contains only one state's data for three weeks in March 2020
@@ -114,7 +116,7 @@ class ExcessDeathsAnalyzer_timeSeries_TestCase(unittest.TestCase):
         analyzer1.timeSeries() 
         
         #check (by asking tester to confirm the plot is correct)
-        check = input("Does this look right? [Y or N]: ")
+        check = input("This is a visual test.\nDoes this look correct? [Y or N]: ")
         self.assertEqual(check, "Y")
     
     def test_is_timeSeries_saving_right(self):
@@ -127,7 +129,41 @@ class ExcessDeathsAnalyzer_timeSeries_TestCase(unittest.TestCase):
         #check
         check = os.path.isfile('Test_Plot.png')
         self.assertTrue(check)
-       
+
+      
+class compareToStateTestCase(unittest.TestCase): # inherit from unittest.TestCase
+    # Unit testing compareToState() method in ExcessDeathsAnalyzers.py
+    
+    def test_is_compareToState_plot_created(self):
+        # Is compareToState() method successfully creating the plot that is  
+        # being produced. If not, something within the code failed for the plot 
+        # to not be produced/called. ie: Did we plot something?
+        
+        Analyzer1 = eda.ExcessDeathsAnalyzer("Michigan", test_data1)
+  
+        # Sets up a mock test to see if a plot is retuned
+        with patch('matplotlib.pyplot.show') as show_patch:
+            Analyzer1.compareToState("Ohio")
+            
+            # Asserts that a plot is returned by plt.show() at the end of the
+            # timeSeries method. If a plot is returned - test is ok. If a plot
+            # is not returned - test fails
+            assert show_patch.called 
+
+    def test_is_compareToState_plotting_right(self):
+        #confirms that compareToState() method produces the correct plot
+        #Note: checking for whether graphics look exactly like eachother can
+        #by tricky and time consuming, especially as minor formatting tweaks are
+        #are implemented.  Instead of automating the check, this test will show 
+        #the tester what graphic is created for visual inspection. 
+        #setup:
+        analyzer1 = eda.ExcessDeathsAnalyzer('Michigan', test_data1)   
+        analyzer1.timeSeries() 
+        
+        #check (by asking tester to confirm the plot is correct)
+        check = input("This is a visual test.\nDoes this plot look correct? [Y or N]: ")
+        self.assertEqual(check, "Y")
+
 if __name__ == '__main__':
     unittest.main()        
         
