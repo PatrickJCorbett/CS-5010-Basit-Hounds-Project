@@ -15,6 +15,7 @@ import unittest
 import os
 import pandas as pd
 import ExcessDeathsAnalyzer as eda
+from PIL import Image
 from unittest.mock import patch
 
 
@@ -132,6 +133,11 @@ class ExcessDeathsAnalyzer_timeSeries_TestCase(unittest.TestCase):
         analyzer1 = eda.ExcessDeathsAnalyzer('Michigan', test_data1)   
         analyzer1.timeSeries() 
         
+        # Shows the sample chart for comparison purposes for the visual 
+        # inspection accomplished below
+        im = Image.open("testingSuite_timeSeries.png")
+        im.show()
+        
         #check (by asking tester to confirm the plot is correct)
         check = input("This is a visual test.\nDoes this look correct? [Y or N]: ")
         self.assertEqual(check, "Y")
@@ -142,7 +148,7 @@ class ExcessDeathsAnalyzer_timeSeries_TestCase(unittest.TestCase):
         #setup:
         analyzer1 = eda.ExcessDeathsAnalyzer('Michigan', test_data1)   
         analyzer1.timeSeries(save = True, filename= 'Test_Plot')
-        
+       
         #check
         check = os.path.isfile('Test_Plot.png')
         self.assertTrue(check)
@@ -215,6 +221,11 @@ class compareToStateTestCase(unittest.TestCase): # inherit from unittest.TestCas
         #setup:
         analyzer1 = eda.ExcessDeathsAnalyzer('Michigan', test_data1)   
         analyzer1.timeSeries() 
+          
+        # Shows the sample chart for comparison purposes for the visual 
+        # inspection accomplished below
+        im = Image.open("testingSuite_compareToState.png")
+        im.show()
         
         #check (by asking tester to confirm the plot is correct)
         check = input("This is a visual test.\nDoes this plot look correct? [Y or N]: ")
