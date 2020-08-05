@@ -162,6 +162,8 @@ class ExcessDeathsAnalyzer:
         output_2 = ("The peak of Excess Deaths, all causes except for COVID-19"\
               ", for {} was on {}".format(self.state,
                                             max_date_except_COVID_print))
+        print(output_1)
+        print(output_2)
         return(output_1 + output_2)
         
     def peakValue(self):
@@ -196,6 +198,8 @@ class ExcessDeathsAnalyzer:
               " at {} excess deaths".format(self.state, 
                                             int(max_excess_except_COVID)))
         
+        print(output_1)
+        print(output_2)
         return(output_1 + output_2)
             
     def compareToState(self, compare_state):

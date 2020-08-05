@@ -21,6 +21,9 @@ from ReadIn_EDA_Clean_Export import *
 ## clean dataset
 input_data = excess_deaths_final
 
+
+#%%
+input_data = pd.read_csv('Excess Deaths Cleaned.csv')
 #%%
 #Read in ExcessDeathsAnalyzer class from ExcessDeathsAnalyzer.py
 from ExcessDeathsAnalyzer import *
@@ -162,7 +165,16 @@ def perform_user_query(user_object, query_choice):
     """
     #If user selected 1, execute the ExcessDeathsAnalyzer.timeSeries() method.
     if query_choice == 1:
-        user_object.timeSeries()
+        save_y_n = input("Would you like to save the output? "\
+                         "Enter Y (yes) or N (no): ").upper()
+        while save_y_n not in ['Y','N']:
+            save_y_n = input("Invalid value. Enter Y (yes) or N (no):").upper()
+        
+        if save_y_n == "Y":
+            user_file = input("Provide File Name For Output: ")
+            user_object.timeSeries(save = True, filename = user_file)
+        elif save_y_n == "N":
+            user_object.timeSeries()
     #If user selected 2, execute the ExcessDeathsAnalyzer.peakDate() method
     elif query_choice == 2:
         user_object.peakDate()
@@ -171,7 +183,16 @@ def perform_user_query(user_object, query_choice):
         user_object.peakValue()
     #If user selected 4, execute all three of the above methods.
     elif query_choice == 4:
-        user_object.timeSeries()
+        save_y_n = input("Would you like to save the output? "\
+                         "Enter Y (yes) or N (no): ").upper()
+        while save_y_n not in ['Y','N']:
+            save_y_n = input("Invalid value. Enter Y (yes) or N (no):").upper()
+        
+        if save_y_n == "Y":
+            user_file = input("Provide File Name For Output: ")
+            user_object.timeSeries(save = True, filename = user_file)
+        elif save_y_n == "N":
+            user_object.timeSeries()
         user_object.peakDate()
         user_object.peakValue()
     #The get_user_query_choice function should not allow a user to end up
@@ -180,6 +201,7 @@ def perform_user_query(user_object, query_choice):
     else:
         raise ValueError("Invalid value given for query_choice. Value "\
                          "must be 1, 2, 3, or 4")
+
 
 def ask_user_whether_to_compare(state):
     """
