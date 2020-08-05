@@ -17,6 +17,7 @@ import pandas as pd
 import ExcessDeathsAnalyzer as eda
 from unittest.mock import patch
 
+
 #Test Data 1 contains two states' data for three weeks in March 2020
 #Test Data 2 contains only one state's data for three weeks in March 2020
 test_data1 = pd.read_csv('TestData1_Excess Deaths Cleaned.csv') 
@@ -128,6 +129,7 @@ class ExcessDeathsAnalyzer_timeSeries_TestCase(unittest.TestCase):
         #check
         check = os.path.isfile('Test_Plot.png')
         self.assertTrue(check)
+
       
 class compareToStateTestCase(unittest.TestCase): # inherit from unittest.TestCase
     # Unit testing compareToState() method in ExcessDeathsAnalyzers.py
@@ -161,6 +163,7 @@ class compareToStateTestCase(unittest.TestCase): # inherit from unittest.TestCas
         #check (by asking tester to confirm the plot is correct)
         check = input("This is a visual test.\nDoes this plot look correct? [Y or N]: ")
         self.assertEqual(check, "Y")
+
 if __name__ == '__main__':
     unittest.main()        
         
