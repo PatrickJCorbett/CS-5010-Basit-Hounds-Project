@@ -104,7 +104,6 @@ class ExcessDeathsAnalyzer_timeSeries_TestCase(unittest.TestCase):
     #Unit testing the creation of timeSeries plots from an ExcessDeathsAnalyzer
     #object
     
-
     def test_is_timeSeries_plotting_right(self):
         #confirms that .timeSeries() method produces the correct plot
         #Note: checking for whether graphics look exactly like eachother can
@@ -130,7 +129,46 @@ class ExcessDeathsAnalyzer_timeSeries_TestCase(unittest.TestCase):
         check = os.path.isfile('Test_Plot.png')
         self.assertTrue(check)
 
-      
+class peakDateTestCase(unittest.TestCase): # inherit from unittest.TestCase
+    # Unit testing peakDate() method in ExcessDeathsAnalyzers.py
+    # Note: due to the way that this method is set-up, only one test for the
+    #       method makes sense because the only return given by the method is
+    #       the tested string output.
+    
+    def test_is_string_output_correct(self):
+        # Is peakDate() method successfully calculating and storing the date 
+        # that the peak excess deaths was reached within a given state and
+        # returning the correct strings for this
+        
+        # Set-up: create object with state 'Michigan' and full data from 
+        # imported CSV (above)
+        analyzer1 = ExcessDeathsAnalyzer("Michigan", test_data1)
+        analyzer1.peakDate()
+        
+        # Assert that returned string will equal the given string
+        # If equal, test passes. If not equal, test fails 
+        self.assertEqual(analyzer1.peakDate(), 'The peak of Excess Deaths, all causes, for Michigan was on 2020-03-21. The peak of Excess Deaths, all causes except for COVID-19, for Michigan was on 2020-03-21')
+        
+class peakValueTestCase(unittest.TestCase): # inherit from unittest.TestCase
+    # Unit testing peakValue() method in ExcessDeathsAnalyzers.py
+    # Note: due to the way that this method is set-up, only one test for the
+    #       method makes sense because the only return given by the method is
+    #       the tested string output.
+     
+    def test_is_string_output_correct(self):
+        # Is peakValue() method successfully calculating and storing the value 
+        # that the peak excess deaths reached within a given state and
+        # returning the correct strings for this
+        
+        # Set-up: create object with state 'Michigan' and full data from 
+        # imported CSV (above)
+        analyzer1 = ExcessDeathsAnalyzer("Michigan", test_data1)
+        analyzer1.peakValue()
+        
+        # Assert that returned string will equal the given string
+        # If equal, test passes. If not equal, test fails 
+        self.assertEqual(analyzer1.peakValue(), 'The peak of Excess Deaths, all causes, for Michigan was at 95 excess deathsThe peak of Excess Deaths, all causes except for COVID-19, for Michigan was at 74 excess deaths')
+                
 class compareToStateTestCase(unittest.TestCase): # inherit from unittest.TestCase
     # Unit testing compareToState() method in ExcessDeathsAnalyzers.py
     
@@ -165,15 +203,4 @@ class compareToStateTestCase(unittest.TestCase): # inherit from unittest.TestCas
         self.assertEqual(check, "Y")
 
 if __name__ == '__main__':
-    unittest.main()        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
+    unittest.main()
