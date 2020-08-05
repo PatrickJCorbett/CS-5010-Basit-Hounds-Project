@@ -24,8 +24,10 @@ test_data1 = pd.read_csv('TestData1_Excess Deaths Cleaned.csv')
 test_data2 = test_data1[test_data1['State']=='Michigan']
 
 #Convert 'Week Ending Date' series/column into datetime objects
-pd.to_datetime(test_data2.loc[:,'Week Ending Date']) 
+test_todate = pd.to_datetime(test_data2['Week Ending Date'])
+test_data2.loc[:,'Week Ending Date'] = test_todate
 
+test_data2["Week Ending Date"]
 
 class ExcessDeathsAnalyzer_init_TestCase(unittest.TestCase):
     #Unit testing the creation of ExcessDeathsAnalyzer objects
@@ -103,6 +105,22 @@ class ExcessDeathsAnalyzer_init_TestCase(unittest.TestCase):
 class ExcessDeathsAnalyzer_timeSeries_TestCase(unittest.TestCase):
     #Unit testing the creation of timeSeries plots from an ExcessDeathsAnalyzer
     #object
+
+    def test_is_timeSeries_plot_created(self):
+        # Is timeSeries() method successfully creating the plot that is  
+        # being produced. If not, something within the code failed for the plot 
+        # to not be produced/called. ie: Did we plot something?
+        
+        Analyzer1 = eda.ExcessDeathsAnalyzer("Michigan", test_data1)
+  
+        # Sets up a mock test to see if a plot is retuned
+        with patch('matplotlib.pyplot.show') as show_patch:
+            Analyzer1.timeSeries()
+            
+            # Asserts that a plot is returned by plt.show() at the end of the
+            # timeSeries method. If a plot is returned - test is ok. If a plot
+            # is not returned - test fails
+            assert show_patch.called 
     
     def test_is_timeSeries_plotting_right(self):
         #confirms that .timeSeries() method produces the correct plot
@@ -184,8 +202,8 @@ class compareToStateTestCase(unittest.TestCase): # inherit from unittest.TestCas
             Analyzer1.compareToState("Ohio")
             
             # Asserts that a plot is returned by plt.show() at the end of the
-            # timeSeries method. If a plot is returned - test is ok. If a plot
-            # is not returned - test fails
+            # compareToState method. If a plot is returned - test is ok. If a 
+            # plot is not returned - test fails
             assert show_patch.called 
 
     def test_is_compareToState_plotting_right(self):
