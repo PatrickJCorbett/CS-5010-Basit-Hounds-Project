@@ -142,7 +142,7 @@ class peakDateTestCase(unittest.TestCase): # inherit from unittest.TestCase
         
         # Set-up: create object with state 'Michigan' and full data from 
         # imported CSV (above)
-        analyzer1 = ExcessDeathsAnalyzer("Michigan", test_data1)
+        analyzer1 = eda.ExcessDeathsAnalyzer("Michigan", test_data1)
         analyzer1.peakDate()
         
         # Assert that returned string will equal the given string
@@ -162,7 +162,7 @@ class peakValueTestCase(unittest.TestCase): # inherit from unittest.TestCase
         
         # Set-up: create object with state 'Michigan' and full data from 
         # imported CSV (above)
-        analyzer1 = ExcessDeathsAnalyzer("Michigan", test_data1)
+        analyzer1 = eda.ExcessDeathsAnalyzer("Michigan", test_data1)
         analyzer1.peakValue()
         
         # Assert that returned string will equal the given string
