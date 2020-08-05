@@ -45,7 +45,8 @@ class ExcessDeathsAnalyzer:
         self.data = self.full_data[self.full_data['State'] == self.state]               
         
         #convert date to a datetime
-        pd.to_datetime(self.data.loc[:,'Week Ending Date']) 
+        week_todate = pd.to_datetime(self.data.loc[:,'Week Ending Date'].copy())
+        self.data.loc[:, "Week Ending Date"] = week_todate
         
         #self.data_allCauses keeps only the rows for 'All causes'
         self.data_allCauses = self.data[self.data['Outcome'] == 'All causes']
@@ -141,15 +142,10 @@ class ExcessDeathsAnalyzer:
         
         max_date_all_print = max_date_all.date() ## printable version
         
-        ## find the maximum Excess Deaths - Higher Bound Estimate value
-        ## for this state and store that value (excess deaths)
-        max_excess_all = self.data_allCauses.iloc[
-            self.data_allCauses['Excess Higher Estimate'].argmax()]\
-            ['Excess Higher Estimate']
+     
         
-        
-        print("The peak of Excess Deaths, all causes, for {} was "\
-              "on {}".format(self.state, max_date_all_print))
+        output_1 = ("The peak of Excess Deaths, all causes, for {} was "\
+              "on {}. ".format(self.state, max_date_all_print))
         
             
         #### Without COVID-19 Deaths ####
@@ -162,16 +158,11 @@ class ExcessDeathsAnalyzer:
         
         max_date_except_COVID_print = max_date_except_COVID.date() ## printable
         
-        ## find the maximum Excess Deaths - Higher Bound Estimate value
-        ## for this state and store that value (excess deaths w/o COVID-19)
-        max_excess_except_COVID = self.data_exceptCovid.iloc[
-            self.data_exceptCovid['Excess Higher Estimate'].argmax()]\
-            ['Excess Higher Estimate']
             
-        print("The peak of Excess Deaths, all causes except for COVID-19"\
+        output_2 = ("The peak of Excess Deaths, all causes except for COVID-19"\
               ", for {} was on {}".format(self.state,
                                             max_date_except_COVID_print))
-      
+        return(output_1 + output_2)
         
     def peakValue(self):
         """
@@ -189,7 +180,7 @@ class ExcessDeathsAnalyzer:
             self.data_allCauses['Excess Higher Estimate'].argmax()]\
             ['Excess Higher Estimate']
     
-        print("The peak of Excess Deaths, all causes, for {} was"\
+        output_1 = ("The peak of Excess Deaths, all causes, for {} was"\
               " at {} excess deaths".format(self.state, int(max_excess_all)))
             
     
@@ -200,11 +191,12 @@ class ExcessDeathsAnalyzer:
             self.data_exceptCovid['Excess Higher Estimate'].argmax()]\
             ['Excess Higher Estimate']
         
-        print("The peak of Excess Deaths, all causes except for COVID-19"\
+        output_2 = ("The peak of Excess Deaths, all causes except for COVID-19"\
               ", for {} was"\
               " at {} excess deaths".format(self.state, 
                                             int(max_excess_except_COVID)))
-            
+        
+        return(output_1 + output_2)
             
     def compareToState(self, compare_state):
         """
@@ -223,7 +215,8 @@ class ExcessDeathsAnalyzer:
         ## create 2 datasets with all the data from the 2 states being compared 
         data_1 = self.data
         data_2 = self.full_data[self.full_data['State'] == state2]
-        pd.to_datetime(data_2.loc[:, 'Week Ending Date'])
+        week_todate = pd.to_datetime(data_2.loc[:,'Week Ending Date'].copy())
+        data_2.loc[:, "Week Ending Date"] = week_todate
         
         ## x-axis of dates for time-series comparisions
         x = self.data['Week Ending Date'].unique() ## x-axis of dates
