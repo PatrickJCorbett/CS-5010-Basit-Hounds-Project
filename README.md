@@ -228,3 +228,11 @@ run the loops that asks the user for inputs.
 TestingSuite_Class_ExcessDeathsAnalyzer.py
 
 Description:
+
+We designed and implemented a testing suite containing one test class for each method that exists in the ExcessDeathsAnalyzer module. 
+
+Each test class attempts to test all features of a particular method; for instance, the __init__ unit test contains six test methods, one for each attribute of the object being initialized. 
+
+We created a smaller test data set to use for unit testing: we narrowed the CDC data to only two states (Michigan and Ohio) for the first three weeks in March 2020.  By using this predefined test data set, we ensure that any future changes to the source dataset do not create faults in our unit testing. 
+
+
